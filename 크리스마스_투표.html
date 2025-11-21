@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>크리스마스 특별프로그램 선물 투표</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      margin: 0;
+      padding: 24px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    p.description {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    p.note {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #777;
+      font-size: 0.85rem;
+    }
+    form {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+    }
+    legend {
+      padding: 0 6px;
+      font-weight: 600;
+    }
+    h3 {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    ul.option-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    ul.option-list li {
+      margin-bottom: 10px;
+    }
+    label {
+      cursor: pointer;
+    }
+    small {
+      color: #777;
+      font-size: 0.85rem;
+    }
+    .category-note {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .submit-wrap {
+      text-align: center;
+      margin-top: 16px;
+    }
+    button[type="submit"] {
+      padding: 10px 24px;
+      font-size: 1rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #1f7aed;
+      color: #fff;
+    }
+    .name-field {
+      margin-bottom: 16px;
+    }
+    .name-field label {
+      font-weight: 600;
+    }
+    .name-field input {
+      width: 100%;
+      max-width: 320px;
+      padding: 6px 8px;
+      margin-top: 4px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    .product-link {
+      margin-top: 4px;
+      font-size: 0.85rem;
+    }
+    .product-link a {
+      text-decoration: none;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #1f7aed;
+      font-size: 0.8rem;
+    }
+    .product-link a:hover {
+      background: #1f7aed;
+      color: #fff;
+    }
+
+    /* 결과 영역 */
+    #resultSection {
+      max-width: 900px;
+      margin: 24px auto 0;
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: none;
+    }
+    #resultSection h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+    .result-summary {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 12px;
+    }
+    table.result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    table.result-table th,
+    table.result-table td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    table.result-table th {
+      background: #f0f2f5;
+    }
+    .votes-list {
+      font-size: 0.88rem;
+      color: #444;
+    }
+    .votes-list li {
+      margin-bottom: 6px;
+    }
+    .back-button-wrap {
+      text-align: center;
+      margin-top: 12px;
+    }
+    .back-button-wrap button {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid #999;
+      background: #f5f5f5;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>크리스마스 특별프로그램 선물 투표</h1>
+  <p class="description">
+    병원학교 크리스마스 특별프로그램에서 사용할 선물을 선정하기 위한 사전 투표입니다.<br />
+    0~6세는 1개, 7세 이상 여아·남아는 각 최대 2개까지 선택할 수 있습니다.
+  </p>
+  <p class="note">
+    ※ 투표 결과는 이 HTML을 여는 <strong>이 브라우저 기준</strong>으로만 저장·집계됩니다.
+  </p>
+
+  <form action="#" method="post" id="giftVoteForm">
+    <!-- 이름 입력 -->
+    <div class="name-field">
+      <label for="voter_name">이름 (실명 기입 필수)</label><br />
+      <input type="text" id="voter_name" name="voter_name" placeholder="예: 최은우" required />
+    </div>
+
+    <!-- 0~6세 -->
+    <fieldset>
+      <legend>0~6세 선물 후보 (택 1)</legend>
+      <p class="category-note">아래 두 가지 중 0~6세 환아에게 가장 잘 맞는 선물 1개를 선택해주세요.</p>
+      <ul class="option-list">
+        <li>
+          <label>
+            <input type="radio" name="gift_0_6" value="baby_shark_singing" required />
+            핑크퐁 노래하는 아기상어 (16,650원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8650302291?itemId=25111200495&vendorItemId=92122153057&q=%EC%95%84%EA%B8%B0%EC%83%81%EC%96%B4&searchId=d1014f9b1157903&sourceType=search&itemsCount=36&searchRank=51&rank=51&traceId=mi722vvc" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="gift_0_6" value="baby_shark_smartwatch" />
+            아기상어 스마트워치 (18,740원)
+          </label>
+          <div class="product-link">
+            <a href="https://link24.kr/3YEUnZW" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+      </ul>
+    </fieldset>
+
+    <!-- 7세 이상 -->
+    <fieldset>
+      <legend>7세 이상 선물 후보</legend>
+      <p class="category-note">
+        7세 이상 환아용 선물은 여아 / 혼성 / 남아용으로 나누어 투표합니다.<br />
+        ▸ 여아 / 남아: 각 최대 2개까지 선택 가능<br />
+        ▸ 혼성: 1개만 선택해주세요.
+      </p>
+
+      <!-- 여아 -->
+      <h3>① 7세 이상 여아 선물 후보 (최대 2개 선택)</h3>
+      <ul class="option-list">
+        <li>
+          <label>
+            <input type="checkbox" class="girl-option" name="gift_7plus_girl[]" value="sanrio_house" />
+            산리오캐릭터즈 뜯어만들기: 소꿉놀이 하우스 (11,380원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8128594196?itemId=23080344513&vendorItemId=90113880215&q=%EB%9C%AF%EC%96%B4%EB%A7%8C%EB%93%A4%EA%B8%B0&searchId=d68144aa1536949&sourceType=search&itemsCount=36&searchRank=3&rank=3&traceId=mi743bsa" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="girl-option" name="gift_7plus_girl[]" value="sanrio_popup_card" />
+            산리오 팝업카드 뜯어만들기 (10,800원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8346721812?itemId=24109709344&vendorItemId=91129002210&q=뜯어만들기&searchId=3770b44c582715&sourceType=search&itemsCount=36&searchRank=50&rank=50&traceId=mi8guezm" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="girl-option" name="gift_7plus_girl[]" value="superstar_tinyping" />
+            슈퍼스타 티니핑 뜯어만들기 (24개) (10,250원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8440268717?itemId=24413909569&vendorItemId=91586840318&q=뜯어+만들기&searchId=bbe487c0547773&sourceType=search&itemsCount=36&searchRank=2&rank=2&traceId=mi8go02m" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="girl-option" name="gift_7plus_girl[]" value="catch_tinyping" />
+            새콤달콤 캐치 티니핑 뜯어만들기 (24개) (10,360원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/7752715777?itemId=20886881518&vendorItemId=87979247105&q=가위+없이+만들기&searchId=6b17b01b595875&sourceType=search&itemsCount=36&searchRank=2&rank=2&traceId=mi8gzjxg" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- 혼성 -->
+      <h3>② 7세 이상 혼성 선물 후보 (택 1)</h3>
+      <ul class="option-list">
+        <li>
+          <label>
+            <input type="radio" name="gift_7plus_unisex" value="real_snack_folding" required />
+            도전! 진짜 과자 접기 (가위 필요, 7,200원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/258518958?itemId=810557030&vendorItemId=5061443209&q=%EB%9C%AF%EC%96%B4%EB%A7%8C%EB%93%A4%EA%B8%B0&searchId=29bd51a94249246&sourceType=search&itemsCount=36&searchRank=2&rank=2&traceId=mi7ih6f4" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="gift_7plus_unisex" value="world_food_paper" />
+            세계 전통음식 뜯어만들기 (14,000원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/197779857?itemId=570497967&vendorItemId=4498325859&q=뜯어만들기&searchId=3770b44c582715&sourceType=search&itemsCount=36&searchRank=68&rank=68&traceId=mi8gw6qa" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="gift_7plus_unisex" value="snoopy_paper" />
+            스누피 뜯어만들기 (9,600원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8826032525?itemId=25718857275&vendorItemId=92733927551&q=뜯어+만드릭&searchId=b639c606618630&sourceType=search&itemsCount=36&searchRank=5&rank=5&traceId=mi8h2gfd" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- 남아 -->
+      <h3>③ 7세 이상 남아 선물 후보 (최대 2개 선택)</h3>
+      <ul class="option-list">
+        <li>
+          <label>
+            <input type="checkbox" class="boy-option" name="gift_7plus_boy[]" value="dinosaur_paper" />
+            공룡 뜯어만들기 (9,800원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8289429542?itemId=23905427928&vendorItemId=90927886449&q=%EB%9C%AF%EC%96%B4%EB%A7%8C%EB%93%A4%EA%B8%B0&searchId=29bd51a94249246&sourceType=search&itemsCount=36&searchRank=8&rank=8&traceId=mi7ifz81" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="boy-option" name="gift_7plus_boy[]" value="pokemon_paper" />
+            포켓몬 뜯어만들기 (9,870원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8479754456?itemId=24537941332&vendorItemId=87238874267&pickType=COU_PICK&q=%EB%9C%AF%EC%96%B4%EB%A7%8C%EB%93%A4%EA%B8%B0&searchId=29bd51a94249246&sourceType=search&itemsCount=36&searchRank=3&rank=3&traceId=mi7ijs3q" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="boy-option" name="gift_7plus_boy[]" value="endless_stairs_paper" />
+            무한의 계단 뜯어만들기 (12,330원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/8180912355?itemId=23388227557&vendorItemId=90554314301&q=%EB%9C%AF%EC%96%B4%EB%A7%8C%EB%93%A4%EA%B8%B0&searchId=29bd51a94249246&sourceType=search&itemsCount=36&searchRank=1&rank=1&traceId=mi7iie9v" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="boy-option" name="gift_7plus_boy[]" value="robot_paper" />
+            로봇 뜯어만들기 (6,000원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/7605892784?itemId=20131546974&vendorItemId=87225539536&q=뜯어만들기&searchId=476b94aa568601&sourceType=search&itemsCount=36&searchRank=26&rank=26&traceId=mi8gsnxb" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" class="boy-option" name="gift_7plus_boy[]" value="power_battle_robot" />
+            파워 배틀 변신로봇 슈퍼 소방차 뜯어만들기 (10,000원)
+          </label>
+          <div class="product-link">
+            <a href="https://www.coupang.com/vp/products/6615645797?itemId=15019499221&vendorItemId=82242213047&q=가위+없이+만들기&searchId=6b17b01b595875&sourceType=search&itemsCount=36&searchRank=29&rank=29&traceId=mi8gyfsh" target="_blank" rel="noopener noreferrer">
+              상품 페이지 열기
+            </a>
+          </div>
+        </li>
+      </ul>
+    </fieldset>
+
+    <div class="submit-wrap">
+      <button type="submit">투표하기</button>
+    </div>
+  </form>
+
+  <!-- 결과 표시 영역 -->
+  <section id="resultSection">
+    <h2>투표 현황 및 결과</h2>
+    <p class="result-summary" id="resultSummaryText"></p>
+
+    <h3>1. 항목별 득표수</h3>
+    <table class="result-table" id="resultTable">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>선물 이름</th>
+          <th>득표수</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS로 채움 -->
+      </tbody>
+    </table>
+
+    <h3>2. 개별 투표 내역</h3>
+    <ul class="votes-list" id="votesList">
+      <!-- JS로 채움 -->
+    </ul>
+
+    <div class="back-button-wrap">
+      <button type="button" id="backToFormButton">다른 사람 투표 계속하기</button>
+    </div>
+  </section>
+
+  <script>
+    const STORAGE_KEY = 'xmasGiftVotes_2025_v1';
+
+    const OPTION_META = {
+      // 0~6세
+      'baby_shark_singing': { label: '핑크퐁 노래하는 아기상어 (16,650원)', group: '0~6세' },
+      'baby_shark_smartwatch': { label: '아기상어 스마트워치 (18,740원)', group: '0~6세' },
+
+      // 여아
+      'sanrio_house': { label: '산리오캐릭터즈 뜯어만들기: 소꿉놀이 하우스 (11,380원)', group: '7세 이상 여아' },
+      'sanrio_popup_card': { label: '산리오 팝업카드 뜯어만들기 (10,800원)', group: '7세 이상 여아' },
+      'superstar_tinyping': { label: '슈퍼스타 티니핑 뜯어만들기 (24개) (10,250원)', group: '7세 이상 여아' },
+      'catch_tinyping': { label: '새콤달콤 캐치 티니핑 뜯어만들기 (24개) (10,360원)', group: '7세 이상 여아' },
+
+      // 혼성
+      'real_snack_folding': { label: '도전! 진짜 과자 접기 (가위 필요, 7,200원)', group: '7세 이상 혼성' },
+      'world_food_paper': { label: '세계 전통음식 뜯어만들기 (14,000원)', group: '7세 이상 혼성' },
+      'snoopy_paper': { label: '스누피 뜯어만들기 (9,600원)', group: '7세 이상 혼성' },
+
+      // 남아
+      'dinosaur_paper': { label: '공룡 뜯어만들기 (9,800원)', group: '7세 이상 남아' },
+      'pokemon_paper': { label: '포켓몬 뜯어만들기 (9,870원)', group: '7세 이상 남아' },
+      'endless_stairs_paper': { label: '무한의 계단 뜯어만들기 (12,330원)', group: '7세 이상 남아' },
+      'robot_paper': { label: '로봇 뜯어만들기 (6,000원)', group: '7세 이상 남아' },
+      'power_battle_robot': { label: '파워 배틀 변신로봇 슈퍼 소방차 뜯어만들기 (10,000원)', group: '7세 이상 남아' }
+    };
+
+    function loadVotes() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
+    }
+
+    function saveVotes(votes) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+    }
+
+    // 체크박스 선택 제한
+    function limitCheckboxes(selector, max, msg) {
+      const boxes = document.querySelectorAll(selector);
+      boxes.forEach(box => {
+        box.addEventListener('change', () => {
+          const checked = Array.from(boxes).filter(b => b.checked);
+          if (checked.length > max) {
+            box.checked = false;
+            alert(msg);
+          }
+        });
+      });
+    }
+
+    limitCheckboxes('.girl-option', 2, '7세 이상 여아 선물은 최대 2개까지만 선택할 수 있습니다.');
+    limitCheckboxes('.boy-option', 2, '7세 이상 남아 선물은 최대 2개까지만 선택할 수 있습니다.');
+
+    const form = document.getElementById('giftVoteForm');
+    const resultSection = document.getElementById('resultSection');
+    const resultTableBody = document.querySelector('#resultTable tbody');
+    const votesListEl = document.getElementById('votesList');
+    const summaryText = document.getElementById('resultSummaryText');
+    const backBtn = document.getElementById('backToFormButton');
+
+    function renderResults() {
+      const votes = loadVotes();
+
+      // 요약 문구
+      summaryText.textContent = `현재까지 총 ${votes.length}명이 투표했습니다.`;
+
+      // 집계
+      const tally = {};
+      Object.keys(OPTION_META).forEach(key => tally[key] = 0);
+
+      votes.forEach(v => {
+        if (v.gift0_6 && tally[v.gift0_6] !== undefined) tally[v.gift0_6]++;
+        (v.girl || []).forEach(val => { if (tally[val] !== undefined) tally[val]++; });
+        if (v.unisex && tally[v.unisex] !== undefined) tally[v.unisex]++;
+        (v.boy || []).forEach(val => { if (tally[val] !== undefined) tally[val]++; });
+      });
+
+      // 테이블 채우기
+      resultTableBody.innerHTML = '';
+      const rows = [];
+      Object.entries(OPTION_META).forEach(([value, meta]) => {
+        rows.push({
+          group: meta.group,
+          label: meta.label,
+          count: tally[value] || 0
+        });
+      });
+      // 보기 좋게 그룹+득표수 기준 정렬
+      rows.sort((a, b) => {
+        if (a.group < b.group) return -1;
+        if (a.group > b.group) return 1;
+        return b.count - a.count;
+      });
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        const tdGroup = document.createElement('td');
+        const tdLabel = document.createElement('td');
+        const tdCount = document.createElement('td');
+        tdGroup.textContent = r.group;
+        tdLabel.textContent = r.label;
+        tdCount.textContent = r.count;
+        tr.appendChild(tdGroup);
+        tr.appendChild(tdLabel);
+        tr.appendChild(tdCount);
+        resultTableBody.appendChild(tr);
+      });
+
+      // 개별 투표 내역
+      votesListEl.innerHTML = '';
+      votes.forEach(v => {
+        const li = document.createElement('li');
+        const parts = [];
+        if (v.gift0_6 && OPTION_META[v.gift0_6]) {
+          parts.push(`0~6세: ${OPTION_META[v.gift0_6].label}`);
+        }
+        if (v.girl && v.girl.length > 0) {
+          const labels = v.girl.map(val => OPTION_META[val]?.label || val).join(', ');
+          parts.push(`7세 이상 여아: ${labels}`);
+        }
+        if (v.unisex && OPTION_META[v.unisex]) {
+          parts.push(`7세 이상 혼성: ${OPTION_META[v.unisex].label}`);
+        }
+        if (v.boy && v.boy.length > 0) {
+          const labels = v.boy.map(val => OPTION_META[val]?.label || val).join(', ');
+          parts.push(`7세 이상 남아: ${labels}`);
+        }
+        li.textContent = `${v.name} — ${parts.join(' | ')}`;
+        votesListEl.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('voter_name');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        alert('이름을 입력해주세요.');
+        nameInput.focus();
+        return;
+      }
+
+      const gift0_6 = (document.querySelector('input[name="gift_0_6"]:checked') || {}).value;
+      if (!gift0_6) {
+        alert('0~6세 선물 후보에서 1개를 선택해주세요.');
+        return;
+      }
+
+      const unisex = (document.querySelector('input[name="gift_7plus_unisex"]:checked') || {}).value;
+      if (!unisex) {
+        alert('7세 이상 혼성 선물 후보에서 1개를 선택해주세요.');
+        return;
+      }
+
+      const girlChecked = Array.from(document.querySelectorAll('.girl-option:checked')).map(b => b.value);
+      const boyChecked = Array.from(document.querySelectorAll('.boy-option:checked')).map(b => b.value);
+
+      if (girlChecked.length === 0) {
+        const ok = confirm('7세 이상 여아 선물에서 선택한 항목이 없습니다. 그대로 제출할까요?');
+        if (!ok) return;
+      }
+      if (boyChecked.length === 0) {
+        const ok = confirm('7세 이상 남아 선물에서 선택한 항목이 없습니다. 그대로 제출할까요?');
+        if (!ok) return;
+      }
+
+      const votes = loadVotes();
+      votes.push({
+        name,
+        gift0_6,
+        girl: girlChecked,
+        unisex,
+        boy: boyChecked,
+        ts: Date.now()
+      });
+      saveVotes(votes);
+
+      // 폼 초기화
+      form.reset();
+
+      // 폼 숨기고 결과 보여주기
+      form.style.display = 'none';
+      resultSection.style.display = 'block';
+      renderResults();
+    });
+
+    backBtn.addEventListener('click', function () {
+      form.style.display = 'block';
+      resultSection.style.display = 'none';
+    });
+
+    // 페이지 처음 열었을 때 이미 저장된 투표가 있으면 결과 버튼 없이도 나중에 볼 수 있게 하려면
+    // 아래 주석을 해제해서 테스트할 수도 있음:
+    // if (loadVotes().length > 0) {
+    //   resultSection.style.display = 'block';
+    //   renderResults();
+    // }
+  </script>
+</body>
+</html>
